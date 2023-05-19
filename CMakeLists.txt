@@ -12,6 +12,16 @@ set(SOURCE_FILES
     src/Variable.cpp
 )
 
+# List of BayesianNetwork test source files
+set(TEST_BAYENET_FILES
+    test/test_BayesianNetwork.cpp
+)
+
+# List of Variable test source files
+set(TEST_VARIABLE_FILES
+    test/test_Variable.cpp
+)
+
 # Add the library
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
@@ -21,6 +31,21 @@ target_include_directories(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/lib
 )
+
+# Locate GTest package
+find_package(GTest REQUIRED)
+
+# Add the BayesianNetwork test executable
+add_executable(tests_BayeNet ${TEST_BAYENET_FILES} test/test_main.cpp)
+
+# Add the Variable test executable
+add_executable(tests_Variable ${TEST_VARIABLE_FILES} test/test_main.cpp)
+
+# Link Google Test to the BayesianNetwork test executable
+target_link_libraries(tests_BayeNet GTest::GTest GTest::Main ${PROJECT_NAME})
+
+# Link Google Test to the Variable test executable
+target_link_libraries(tests_Variable GTest::GTest GTest::Main ${PROJECT_NAME})
 
 # Compiler warnings
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
