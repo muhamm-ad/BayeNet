@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # List of source files
 set(SOURCE_FILES
-    src/BayesianNetwork.cpp
+    # src/BayesianNetwork.cpp
     src/Variable.cpp
 )
 
@@ -36,13 +36,13 @@ target_include_directories(${PROJECT_NAME}
 find_package(GTest REQUIRED)
 
 # Add the BayesianNetwork test executable
-add_executable(tests_BayeNet ${TEST_BAYENET_FILES} test/test_main.cpp)
+# add_executable(tests_BayeNet ${TEST_BAYENET_FILES} test/test_main.cpp)
 
 # Add the Variable test executable
 add_executable(tests_Variable ${TEST_VARIABLE_FILES} test/test_main.cpp)
 
 # Link Google Test to the BayesianNetwork test executable
-target_link_libraries(tests_BayeNet GTest::GTest GTest::Main ${PROJECT_NAME})
+# target_link_libraries(tests_BayeNet GTest::GTest GTest::Main ${PROJECT_NAME})
 
 # Link Google Test to the Variable test executable
 target_link_libraries(tests_Variable GTest::GTest GTest::Main ${PROJECT_NAME})
