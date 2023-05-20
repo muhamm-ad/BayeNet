@@ -115,5 +115,15 @@ class BayesianNetwork {
                           unsigned int numIterations);
 
   private:
-    // Add private member functions as needed
+    
+    /**
+     * Checks if a variable is part of the evidence.
+     * @param var A shared pointer to a variable.
+     * @param evidence A vector of tuples, each consisting of a shared pointer to a variable and a
+     * boolean value, representing the evidence variables with which to compare the given variable.
+     * @return true if the variable is part of the evidence, false otherwise.
+     */
+    bool BayesianNetwork::isVarEvidence(
+        const std::shared_ptr<Variable> &var,
+        const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> evidence);
 };
