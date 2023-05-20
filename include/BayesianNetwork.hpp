@@ -123,7 +123,7 @@ class BayesianNetwork {
      * boolean value, representing the evidence variables with which to compare the given variable.
      * @return true if the variable is part of the evidence, false otherwise.
      */
-    bool BayesianNetwork::isVarEvidence(
+    bool isVarEvidence(
         const std::shared_ptr<Variable> &var,
         const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> evidence);
 };
