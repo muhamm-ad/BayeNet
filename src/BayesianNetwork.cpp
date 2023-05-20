@@ -56,7 +56,35 @@ double BayesianNetwork::approximateInference(
     std::vector<std::tuple<std::shared_ptr<Variable>, bool>> evidence, unsigned int numIterations) {
 
     // Chrono C("approximateInference");
-    // TODO : Approximate evaluation by rejection sampling
+
+    // Initialize the counter of compatible samples
+    unsigned int compatibleEvidence = 0;
+    unsigned int compatibleInference = 1;
+
+    // Loop to generate samples
+    for (unsigned int i = 0; i < numIterations; ++i) {
+        // Generate a sample for each variable in the Bayesian network
+        std::map<std::shared_ptr<Variable>, bool> sample;
+        for (const auto &var : variables) {
+            std::map<std::shared_ptr<Variable>, bool> parent_sample;
+            for (const auto &parent : var->getParents()) {
+                parent_sample[parent] = sample[parent];
+            }
+            bool v = var->sample(parent_sample);
+            sample[var] = v;
+        }
+
+        // If the sample is compatible, increment the counter
+        if (isConsistent(sample, evidence)) {
+            ++compatibleEvidence;
+            // Count the compatible samples that correspond to the queries
+            if (isConsistent(sample, varsToEstimate))
+                ++compatibleInference;
+        }
+    }
+    // Calculate the normalized probability by dividing the number of compatible samples by the
+    // total number of iterations
+    return static_cast<double>(compatibleInference) / static_cast<double>(compatibleEvidence);
 
     return 1;
 }
@@ -74,3 +102,15 @@ double BayesianNetwork::gibbsInference(
 //************************************************/
 //************** PRIVATE FUNCTIONS ***************/
 //************************************************/
+
+bool BayesianNetwork::isConsistent(
+    std::map<std::shared_ptr<Variable>, bool> &sample,
+    const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &observations) {
+    // Check if the sample is consistent with the evidence
+    for (const auto &[Var, Val] : observations) {
+        if (sample[Var] != Val) {
+            return false;
+        }
+    }
+    return true;
+}

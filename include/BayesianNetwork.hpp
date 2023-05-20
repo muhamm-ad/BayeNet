@@ -115,5 +115,14 @@ class BayesianNetwork {
                           unsigned int numIterations);
 
   private:
-    // Add private member functions as needed
+    /**
+     * Checks if a sample is consistent with a given set of observations.
+     * @param sample A map from shared pointers to variables to boolean values, representing a
+     * possible state of the Bayesian network.
+     * @param observations A vector of tuples, each consisting of a shared pointer to a variable and
+     * a boolean value, representing the observations with which to compare the sample.
+     * @return true if the sample is consistent with the observations, false otherwise.
+     */
+    bool isConsistent(std::map<std::shared_ptr<Variable>, bool> &sample,
+                      const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &observations);
 };
