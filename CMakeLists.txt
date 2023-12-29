@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(SOURCE_FILES
     src/BayesianNetwork.cpp
     src/Variable.cpp
+    src/Factor.cpp
 )
 
 # List of BayesianNetwork test source files

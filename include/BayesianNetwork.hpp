@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "Chrono.h"
+#include "Factor.hpp"
 #include "Variable.hpp"
 
 template <class T> void addArgsToVector(std::vector<T> &vec) {}
@@ -115,5 +116,77 @@ class BayesianNetwork {
                           unsigned int numIterations);
 
   private:
-    // Add private member functions as needed
+    /**
+     * Creates a Factor for a given variable, taking into account the given evidence.
+     * @param var: A shared pointer to the Variable for which a Factor is to be created.
+     * @param evidence: A vector of tuples containing shared pointers to the Variable
+     *                  objects representing the evidence and their boolean values.
+     * @return: The created Factor for the variable.
+     */
+    Factor createFactor(const std::shared_ptr<Variable> &var,
+                        const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &evidence);
+
+    /**
+     * Sorts the given variables using the Min-Fill heuristic.
+     * @param variables: A vector of shared pointers to the Variable objects to be sorted.
+     * @return: A vector of sorted shared pointers to the Variable objects.
+     */
+    std::vector<std::shared_ptr<Variable>>
+    sortVariables(const std::vector<std::shared_ptr<Variable>> &variables);
+
+    /**
+     * Determines whether a variable is hidden, given the variables to estimate and the evidence.
+     * @param var: A shared pointer to the Variable to be checked.
+     * @param varsToEstimate: A vector of tuples containing shared pointers to the
+     *                          Variable objects to be estimated and their boolean values.
+     * @param evidence: A vector of tuples containing shared pointers to the Variable
+     *                  objects representing the evidence and their boolean values.
+     * @return: A boolean indicating whether the variable is hidden.
+     */
+    bool isHidden(const std::shared_ptr<Variable> &var,
+                  const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &varsToEstimate,
+                  const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &evidence);
+
+    /**
+     * Eliminates a variable from the factors.
+     * @param var: A shared pointer to the Variable to be eliminated.
+     * @param factors: A vector of Factors from which the variable is to be eliminated.
+     * @return: A vector of Factors after eliminating the variable.
+     */
+    std::vector<Factor> eliminateVar(const std::shared_ptr<Variable> &var,
+                                     const std::vector<Factor> &factors);
+
+    /**
+     * Multiplies two factors.
+     * @param f1: The first Factor.
+     * @param f2: The second Factor.
+     * @return: The resulting Factor after multiplication.
+     */
+    Factor multiplyFactors(const Factor &f1, const Factor &f2);
+
+    /**
+     * Multiplies a vector of factors, considering the variables to estimate and the evidence.
+     * @param factors: A vector of Factors to be multiplied.
+     * @param varsToEstimate: A vector of tuples containing shared pointers to the
+     *                          Variable objects to be estimated and their boolean values.
+     * @param evidence: A vector of tuples containing shared pointers to the Variable
+     *                  objects representing the evidence and their boolean values.
+     * @return: A tuple containing the joint probability and the resulting Factor after
+     * multiplication.
+     */
+    std::tuple<double, Factor>
+    multiplyFactors(const std::vector<Factor> &factors,
+                    const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &varsToEstimate,
+                    const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &evidence);
+
+    /**
+     * Normalizes a joint probability and a product factor, given the evidence.
+     * @param jointProbability: The joint probability to be normalized.
+     * @param product: The product Factor to be normalized.
+     * @param evidence: A vector of tuples containing shared pointers to the Variable
+     *                  objects representing the evidence and their boolean values.
+     * @return: The normalized joint probability.
+     */
+    double normalize(double jointProbability, Factor &product,
+                     const std::vector<std::tuple<std::shared_ptr<Variable>, bool>> &evidence);
 };
